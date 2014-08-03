@@ -2,7 +2,10 @@ from flask import Flask, session, redirect, url_for, escape, request
 from flask import render_template
 from sqlalchemy import create_engine, Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-import datetime, uuid
+
+import datetime, uuid, os
+
+import parser
 
 Base = declarative_base()
 
@@ -28,6 +31,7 @@ def upload_file():
     username = request.cookies.get('token')
     if request.method == 'POST':
         f = request.files['the_file']
+        f = parser.load(f)
         f.save('/var/www/uploads/'+session['token']+'/upload.json')
 
 
@@ -43,7 +47,6 @@ def quit():
     return redirect(url_for('index'))
 
 # set the secret key.  keep this really secret:
-app.secret_key = 'm4jOOOS6ctRe6cnVzn9wMkd0AKN1xbkchPbUe8awq7Ykzw6eIDqFUGAxLN8Cw9BczAHqJ1KntzcffOSahyzMp3I0P26wS3G13i0BBNFB1cvriAZflMwMBcqgmPGz7s91gJdxI8oHq6WDS1861LfvqxlTEfG2OsNfyAnEdjXuHVqEHjkvRv5TCXg6GCCXdDSfQJrGYpPtA0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
-if __name__ == "__main__":
+app.secret_key = os.environ['SECRET_KEY']
+ if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
