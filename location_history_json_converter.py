@@ -199,5 +199,5 @@ def deg2rad(deg):
     return deg * (math.pi/180)
 
 
-if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+#if __name__ == "__main__":
+#    sys.exit(main(sys.argv))

@@ -23,32 +23,26 @@
       <div class="header">
         <ul class="nav nav-pills pull-right">
           <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="http://college.nfshost.com">About</a></li>
+          <li><a href="mailto:brianherman{at}gmail.com">Contact</a></li>
         </ul>
         <h3 class="text-muted">what they have on you</h3>
       </div>
 
       <div class="jumbotron">
         <h1>Find out what a certain search company has on you</h1>
-        <p class="lead">Your data will be deleted as soon as you close the page.</p>
+        <p class="lead">Your data will be deleted after a week.</p>
         <p>
-        <form action="/file-upload" class="dropzone">
+        <form action="/upload" class="dropzone">
           <div class="fallback">
               <input name="file" type="file" multiple />
           </div>
        </form>
-
-
-
       </div>
-
-      {%for i in range(0,21)%}
-      <div class="row marketing">
-        <div id="map-canvas{{i}}" class="col-lg-6">
-            
-        </div>
-
+      {%for i in range(0,6)%}
+      <div class="col-md-6">
+        <iframe src="viewme/0{{i}}">
+        </iframe>    
       </div>
       {%endfor%}
 
@@ -56,36 +50,6 @@
         <p>&copy; Company 2014</p>
       </div>
 <script src="static/dropzone.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script>
-    function initialize(){
-    var chicago = new google.maps.LatLng(41.875696,-87.624207);
-      var mapOptions = {
-        zoom: 11,
-        center: chicago
-      }
-      var ctaLayer = [];
-      var maps = [];
-        for(int i=0; i<21 i++){
-          if(0<=9){
-              maps.append(new google.maps.Map(document.getElementById('map-canvas0'+i), mapOptions));
-              var ctaLayerToAppend = new google.maps.KmlLayer({
-                url: 'static/map.0'+i+.kml'
-              });
-              maps.append(ctaLayerToAppend);
-          }
-          ctaLayer.map(function(m){m.setMap(map);
-          }else if(10>i<21){
-              maps.append(new google.maps.Map(document.getElementById('map-canvas'+i), mapOptions));
-              var ctaLayerToAppend = new google.maps.KmlLayer({
-                url: 'static/map.'+i+.kml'
-              });
-              maps.append(ctaLayerToAppend);
-         }
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
-
-    </script>
 
     </div> <!-- /container -->
 
