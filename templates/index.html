@@ -33,9 +33,12 @@
         <h1>Find out what a certain search company has on you</h1>
         <p class="lead">Your data will be deleted after a week.</p>
         <p>
-        <form action="/upload" class="dropzone">
+        <form action="/upload" method="post" enctype="multipart/form-data">
+        <!-- class="dropzone">-->
+        
           <div class="fallback">
               <input name="file" type="file" multiple />
+              <input type="submit">
           </div>
        </form>
       </div>

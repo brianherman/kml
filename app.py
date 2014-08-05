@@ -9,10 +9,11 @@ from werkzeug.utils import secure_filename
 import datetime, uuid, os, ConfigParser
 
 #local python includes
-import parser
+from parser import Parse 
+from split import split 
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-
+ALLOWED_EXTENSIONS = set(['kml'])
+UPLOAD_PATH='/home/brianherman/kml/static'
 Base = declarative_base()
 
 engine = create_engine('sqlite:///tokens.db')
@@ -23,38 +24,52 @@ class Token(Base):
 
 
 app = Flask(__name__)
+
 @app.route('/static/<path:filename>')
 def send_foo(filename):
     return send_from_directory('static', filename)
+
 @app.route("/")
 def index():
     session['token'] = uuid.uuid4()
     the_token = Token(uuid = session['token'],expire=datetime.datetime.utcnow) 
     return render_template('index.html', token=session['token'])
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-#    username = request.cookies.get('token')
+    file = request.files['file']
     if request.method == 'POST':
-        file = request.files['file']
         if file and allowed_file(file.filename):
-            os.mkdir('/home/brianherman/kml/static/'+str(session['token']),777)
-            file.save('/home/brianherman/kml/static/'+str(session['token'])+'/upload.json')
-            parser.load('/home/brianherman/kml/static/'+str(session['token'])+'upload.json',\
-                        '/home/brianherman/kml/static'/+str(session['token'])+'upload.kml')
-            splitter.load('/home/brianherman/kml/static/'+str(session['token'])+'upload.kml',\
-                          '/home/brianherman/kml/static/'+str(session['token']))
-        return render_template("view.html")
+          if not os.path.exists(os.path.join(UPLOAD_PATH,str(session['token']))):
+              os.mkdir(os.path.join(UPLOAD_PATH,str(session['token'])))
+              os.chmod(os.path.join(UPLOAD_PATH,str(session['token'])),0777)
+          file.save(os.path.join(UPLOAD_PATH,str(session['token']),'upload.json'))
+          the_parser = Parse()
+          file_to_parse = os.path.join( UPLOAD_PATH,str(session['token']), 'upload.json' )
+          result        = os.path.join(UPLOAD_PATH,str(session['token']),'upload.kml')
+          user_dir   = os.path.join(UPLOAD_PATH,str(session['token']))
+          print file_to_parse
+          the_splitter = Splitter()
+          the_parser.load(file_to_parse,result)
+          splitter.load(result,user_dir)
+#            os.mkdir('/home/brianherman/kml/static/'+str(session['token']),777)
+#            file.save('/home/brianherman/kml/static/'+str(session['token'])+'/upload.json')
+#            parser.load('/home/brianherman/kml/static/'+str(session['token'])+'upload.json',\
+#                        '/home/brianherman/kml/static'/+str(session['token'])+'upload.kml')
+#            splitter.load('/home/brianherman/kml/static/'+str(session['token'])+'upload.kml',\
+#                          '/home/brianherman/kml/static/'+str(session['token']))
+        return render_template("view.html",token=session['token'], number=10)
 
 @app.route('/viewme/<number>')
 def viewme(number=None):
     return render_template('view.html', number=number)
+
 @app.route('/view')
 def view():
-    username = request.cookies.get('token')
     big_file = '/home/brianherman/static/'+session['token']+'/upload.json'
     
 @app.route('/quit')
