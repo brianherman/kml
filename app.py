@@ -15,7 +15,7 @@ from split import split
 ALLOWED_EXTENSIONS = set(['kml'])
 UPLOAD_PATH='/home/brianherman/kml/static'
 Base = declarative_base()
-
+UPLOAD_PATH = '/home/brianherman/kml/static/' 
 engine = create_engine('sqlite:///tokens.db')
 class Token(Base):
     __tablename__ = 'token'
@@ -41,9 +41,21 @@ def allowed_file(filename):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
+<<<<<<< HEAD
+=======
     file = request.files['file']
+>>>>>>> 44ab447a10c683fcea2d59a9bb60946080fbd3ca
     if request.method == 'POST':
         if file and allowed_file(file.filename):
+<<<<<<< HEAD
+            os.mkdir(os.path.join(UPLOAD_PATH,str(session['token'])),777)
+            file.save(os.path.join(UPLOAD_PATH,str(session['token']),'upload.json'))
+#            parser.load(os.path.join(UPLOAD_PATH,str(session['token']),'upload.json'),\
+#                        os.path.join(UPLOAD_PATH,str(session['token']),'upload.kml'))
+#            splitter.load(os.path.join(UPLOAD_PATH,str(session['token'])+'upload.kml'),\
+#                          os.path.join(str(session['token'])))
+    return render_template("view.html")
+=======
           if not os.path.exists(os.path.join(UPLOAD_PATH,str(session['token']))):
               os.mkdir(os.path.join(UPLOAD_PATH,str(session['token'])))
               os.chmod(os.path.join(UPLOAD_PATH,str(session['token'])),0777)
@@ -63,6 +75,7 @@ def upload_file():
 #            splitter.load('/home/brianherman/kml/static/'+str(session['token'])+'upload.kml',\
 #                          '/home/brianherman/kml/static/'+str(session['token']))
         return render_template("view.html",token=session['token'], number=10)
+>>>>>>> 44ab447a10c683fcea2d59a9bb60946080fbd3ca
 
 @app.route('/viewme/<number>')
 def viewme(number=None):
@@ -85,5 +98,5 @@ with open('secret_key.txt', 'r') as key_file:
     app.secret_key = secret_key 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True, port=5000)
+#    app.run(host='0.0.0.0', debug=True, port=5000)
 #    app.run(host='0.0.0.0', debug=True, port=80)
