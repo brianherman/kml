@@ -7,7 +7,7 @@ import math
 from argparse import ArgumentParser
 from datetime import datetime
 class Parse:
-    def load(filename, output):
+    def load(self,filename, output):
         try:
             json_data = open(filename).read()
         except:
