@@ -14,7 +14,7 @@ import parser
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 Base = declarative_base()
-
+UPLOAD_PATH = '/home/brianherman/kml/static/' 
 engine = create_engine('sqlite:///tokens.db')
 class Token(Base):
     __tablename__ = 'token'
@@ -37,17 +37,16 @@ def allowed_file(filename):
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
-#    username = request.cookies.get('token')
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
-            os.mkdir('/home/brianherman/kml/static/'+str(session['token']),777)
-            file.save('/home/brianherman/kml/static/'+str(session['token'])+'/upload.json')
-            parser.load('/home/brianherman/kml/static/'+str(session['token'])+'upload.json',\
-                        '/home/brianherman/kml/static'/+str(session['token'])+'upload.kml')
-            splitter.load('/home/brianherman/kml/static/'+str(session['token'])+'upload.kml',\
-                          '/home/brianherman/kml/static/'+str(session['token']))
-        return render_template("view.html")
+            os.mkdir(os.path.join(UPLOAD_PATH,str(session['token'])),777)
+            file.save(os.path.join(UPLOAD_PATH,str(session['token']),'upload.json'))
+#            parser.load(os.path.join(UPLOAD_PATH,str(session['token']),'upload.json'),\
+#                        os.path.join(UPLOAD_PATH,str(session['token']),'upload.kml'))
+#            splitter.load(os.path.join(UPLOAD_PATH,str(session['token'])+'upload.kml'),\
+#                          os.path.join(str(session['token'])))
+    return render_template("view.html")
 
 @app.route('/viewme/<number>')
 def viewme(number=None):
@@ -70,5 +69,5 @@ with open('secret_key.txt', 'r') as key_file:
     app.secret_key = secret_key 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True, port=5000)
+#    app.run(host='0.0.0.0', debug=True, port=5000)
 #    app.run(host='0.0.0.0', debug=True, port=80)

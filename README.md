@@ -1,7 +1,11 @@
 kml
 ===
 Brian Herman's Location data.
-kml files are Under the license
+kml files are Under the license and every python file except location\_history
+\_json\_converter.py and spliter.py are also under the MIT license.
+
+
+
 The MIT License (MIT)
 
 Copyright (c) 2014 Brian Herman
